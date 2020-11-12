@@ -1,3 +1,25 @@
+<<<<<<< HEAD
+import React from 'react';
+import Employee from '../components/employee';
+
+function Employees(props) {
+        
+    return (
+      <div>
+        <h1>Employee Data</h1> 
+        {props.result.length >0 && props.result.map((c, data) => (
+          <div key={data}>
+              <>         
+              <Employee emp={c}/>
+                <hr />
+              </>            
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+=======
 import React, {useEffect, useState} from 'react';
 import Employee from '../components/employee';
 
@@ -39,4 +61,5 @@ function Employees() {
     );
   }
 
+>>>>>>> 34f7e42a4f7cdcb437a0b57a81e72a1fdc6b8e67
 export default Employees;

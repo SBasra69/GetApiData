@@ -6,10 +6,10 @@ const Employee = (props) => {
           
     return (
         <div>
-            <Header title={props.emp.id} Text="id: "/>
-            <Paragraph value={props.emp.employee_name} Text="Name: "/>
-            <Paragraph value={props.emp.employee_salary} Text="Salary: "/>
-            <Paragraph value={props.emp.employee_age} Text="Age: "/>
+            <Header title={props.emp.id} text="id: "/>
+            <Paragraph value={props.emp.employee_name} text="Name: "/>
+            <Paragraph value={props.emp.employee_salary} text="Salary: "/>
+            <Paragraph value={props.emp.employee_age} text="Age: "/>
         </div>
     )        
 }
