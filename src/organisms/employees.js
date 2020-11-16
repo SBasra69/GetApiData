@@ -8,7 +8,7 @@ function Employees(props) {
         <h1>Employee Data</h1> 
         <table>  
           <tr >
-            <th>Id</a></th>
+            <th>Id</th>
             <th>Name</th>
             <th>Salary</th>
             <th>Age</th>
