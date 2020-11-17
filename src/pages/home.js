@@ -11,7 +11,10 @@ const Home = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [orderBy, setOrderBy] = useState("employee_name");
     const [orderDir, setOrderDir] = useState("asc");
-        
+    const [sortOn, setSortOn] = useState("");
+    const [sortAscending, setSortAscending] = useState(false);
+
+        console.log(employee);
     useEffect(() => {
         const fetchEmployees = async() => {
           setSuccess(false);
@@ -21,6 +24,62 @@ const Home = () => {
         }
         fetchEmployees()
         
+      }, []);
+
+      const handleSort = columnName => {
+          setSortOn(columnName);
+          setSortAscending(true);
+      }
+
+      useEffect(() => {
+        const empSorted = employee.sort((a,b) => {
+              if (b.employee_name > a.employee_name)
+              return 1;
+              if (b.employee_name < a.employee_name)
+              return -1;
+              return 0;
+            } ); 
+        console.log(empSorted);
+        setEmployee(empSorted);
+      }, [sortOn, sortAscending, setEmployee]);
+
+      const handleChange = e => {
+        setSearchTerm(e.target.value.trim());
+      };
+
+      const handleOrder = e => {
+        setOrderBy(e.target.value.trim());
+      }
+      
+      const handleDir = e => {
+        setOrderDir(e.target.value.trim());
+      }
+
+    return (
+    <header className="App-header">
+        {isLoading && <p>Loading Employees...</p>}
+        {success!=="success" && <p>Failure is not a option</p>}
+        {employee.length === 0 && <p>No Employees!</p>} 
+
+        <Filter searchTerm={searchTerm}  
+                orderBy={orderBy}
+                orderDir = {orderDir}
+                changeHandle={handleChange}
+                changeOrder={handleOrder}
+                changeDir={handleDir}
+                />      
+        {searchTerm}
+        {orderBy}
+        {orderDir}
+        <Employees result={employee} onSort={handleSort}/>
+    </header>
+    )
+}
+
+export default Home;
+
+
+
 
         // fetch('http://dummy.restapiexample.com/api/v1/employees')
         //   .then(res => res.json())
@@ -69,39 +128,3 @@ const Home = () => {
         //   ));
         //     setIsLoading(false);
         //   })      
-      }, [employee]);
-
-      const handleChange = e => {
-        setSearchTerm(e.target.value.trim());
-      };
-
-      const handleOrder = e => {
-        setOrderBy(e.target.value.trim());
-      }
-      
-      const handleDir = e => {
-        setOrderDir(e.target.value.trim());
-      }
-
-    return (
-    <header className="App-header">
-        {isLoading && <p>Loading Employees...</p>}
-        {success!=="success" && <p>Failure is not a option</p>}
-        {employee.length === 0 && <p>No Employees!</p>} 
-
-        <Filter searchTerm={searchTerm}  
-                orderBy={orderBy}
-                orderDir = {orderDir}
-                changeHandle={handleChange}
-                changeOrder={handleOrder}
-                changeDir={handleDir}
-                />      
-        {searchTerm}
-        {orderBy}
-        {orderDir}
-        <Employees result={employee}/>
-    </header>
-    )
-}
-
-export default Home;
