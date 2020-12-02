@@ -1,79 +1,80 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Employees from '../organisms/employees';
 import GetEmployees from '../api/employees';
 import Filter from "../organisms/filter";
 
 const Home = () => {
-    const [employee, setEmployee] = useState([]);
-    const [success, setSuccess] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [sorted, setSorted] = useState(employee);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [orderBy, setOrderBy] = useState("employee_name");
-    const [orderDir, setOrderDir] = useState("asc");
-    const [sortOn, setSortOn] = useState("");
-    const [sortAscending, setSortAscending] = useState(false);
+  const [employee, setEmployee] = useState([]);
+  const [success, setSuccess] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [orderBy, setOrderBy] = useState("employee_name");
+  const [orderDir, setOrderDir] = useState("asc");
 
-        console.log(employee);
-    useEffect(() => {
-        const fetchEmployees = async() => {
-          setSuccess(false);
-          const data = await GetEmployees();
-          setEmployee(data);
-          setSuccess(true);
-        }
-        fetchEmployees()
-        
-      }, []);
+  console.log(employee);
+  useEffect(() => {
+    setIsLoading(true);
+    const fetchEmployees = async () => {
+      setSuccess(false);
+      const data = await GetEmployees();
+      setEmployee(data);
+      setSuccess(true);
+      setIsLoading(true);
+    }
+    fetchEmployees()
+  }, []);
 
-      const handleSort = columnName => {
-          setSortOn(columnName);
-          setSortAscending(true);
+  const handleSort = (columnName, sortDirectionAsc) => {
+    const empSorted = employee.sort((a, b) => {
+      if (sortDirectionAsc) {
+        if (b[columnName] > a[columnName])
+          return 1;
+        if (b[columnName] < a[columnName])
+          return -1;
       }
-
-      useEffect(() => {
-        const empSorted = employee.sort((a,b) => {
-              if (b.employee_name > a.employee_name)
-              return 1;
-              if (b.employee_name < a.employee_name)
-              return -1;
-              return 0;
-            } ); 
-        console.log(empSorted);
-        setEmployee(empSorted);
-      }, [sortOn, sortAscending, setEmployee]);
-
-      const handleChange = e => {
-        setSearchTerm(e.target.value.trim());
-      };
-
-      const handleOrder = e => {
-        setOrderBy(e.target.value.trim());
+      else {
+        if (b[columnName] < a[columnName])
+          return 1;
+        if (b[columnName] > a[columnName])
+          return -1;
       }
-      
-      const handleDir = e => {
-        setOrderDir(e.target.value.trim());
-      }
+      return 0;
+    });
+    console.log(empSorted);
+    setEmployee(empSorted);
+  }
 
-    return (
+  const handleChange = e => {
+    setSearchTerm(e.target.value.trim());
+  };
+
+  const handleOrder = e => {
+    setOrderBy(e.target.value.trim());
+  }
+
+  const handleDir = e => {
+    setOrderDir(e.target.value.trim());
+  }
+
+  return (
     <header className="App-header">
-        {isLoading && <p>Loading Employees...</p>}
-        {success!=="success" && <p>Failure is not a option</p>}
-        {employee.length === 0 && <p>No Employees!</p>} 
+      {isLoading && <p>Loading Employees...</p>}
+      {success !== "success" && <p>Failure is not a option</p>}
+      {employee.length === 0 && <p>No Employees!</p>}
 
-        <Filter searchTerm={searchTerm}  
-                orderBy={orderBy}
-                orderDir = {orderDir}
-                changeHandle={handleChange}
-                changeOrder={handleOrder}
-                changeDir={handleDir}
-                />      
-        {searchTerm}
-        {orderBy}
-        {orderDir}
-        <Employees result={employee} onSort={handleSort}/>
+      <Filter searchTerm={searchTerm}
+        orderBy={orderBy}
+        orderDir={orderDir}
+        changeHandle={handleChange}
+        changeOrder={handleOrder}
+        changeDir={handleDir}
+      />
+      {searchTerm}
+      {orderBy}
+      {orderDir}
+      <Employees result={employee} onSort={handleSort} />
     </header>
-    )
+  )
 }
 
 export default Home;
@@ -95,7 +96,7 @@ export default Home;
         //     } else {
         //       order = -1;
         //     }            
-            
+
         //     filteredEmps = filteredEmps.sort((a, b) => {
         //     if (orderBy === 'id')
         //     {
