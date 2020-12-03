@@ -10,6 +10,7 @@ const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [orderBy, setOrderBy] = useState("employee_name");
   const [orderDir, setOrderDir] = useState("asc");
+  const [filteredEmployee, setFilteredEmployee] = useState([employee]);
 
   console.log(employee);
   useEffect(() => {
@@ -18,6 +19,7 @@ const Home = () => {
       setSuccess(false);
       const data = await GetEmployees();
       setEmployee(data);
+      setFilteredEmployee(data);
       setSuccess(true);
       setIsLoading(true);
     }
@@ -40,22 +42,25 @@ const Home = () => {
       }
       return 0;
     });
-    console.log(empSorted);
+    console.log("sorted:" + empSorted);
     setEmployee(empSorted);
   }
 
   const handleChange = e => {
-    setSearchTerm(e.target.value.trim());
+    const SearchTerm = e.target.value.trim();  
+    setSearchTerm(SearchTerm); 
+    if (!SearchTerm === '')
+    { setFilteredEmployee(employee);}
+    else
+    {
+      setFilteredEmployee(employee.filter((res) => res.employee_name.toLowerCase().includes(SearchTerm)));
+    }    
   };
 
   const handleOrder = e => {
     setOrderBy(e.target.value.trim());
   }
-
-  const handleDir = e => {
-    setOrderDir(e.target.value.trim());
-  }
-
+  
   return (
     <header className="App-header">
       {isLoading && <p>Loading Employees...</p>}
@@ -67,12 +72,10 @@ const Home = () => {
         orderDir={orderDir}
         changeHandle={handleChange}
         changeOrder={handleOrder}
-        changeDir={handleDir}
       />
       {searchTerm}
       {orderBy}
-      {orderDir}
-      <Employees result={employee} onSort={handleSort} />
+      <Employees result={filteredEmployee} onSort={handleSort} />
     </header>
   )
 }

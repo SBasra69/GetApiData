@@ -43,6 +43,7 @@ function Employees(props) {
     <div>
       <h1>Employee Data</h1>
       <table>
+      <tbody>        
         <tr >
           <th onClick={e => handleSort('id')}>Id</th>
           <th onClick={e => handleSort('employee_name')}>Name</th>
@@ -54,6 +55,7 @@ function Employees(props) {
             <Employee emp={c} />
           </tr>
         ))}
+      </tbody>
       </table>
     </div>
   );
